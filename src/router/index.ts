@@ -12,7 +12,7 @@ const router = createRouter({
       component: HomePage
     },
     {
-      path: '/todo-list',
+      path: '/todo-list/:id',
       name: 'todolist',
       component: TodoList
     }

@@ -32,7 +32,7 @@
             </template>
             <v-card>
               <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
+                <span class="text-h5">NEW ITEM</span>
               </v-card-title>
   
               <v-card-text>
@@ -143,13 +143,6 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
         created: ''
       },
     }),
-
-    computed: {
-      formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-      },
-    },
-
     watch: {
       dialog (val) {
         val || this.close()
@@ -166,7 +159,8 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 
     methods: {
         detail(item) {
-            console.log(item.title)
+            this.$router.push({name: 'todolist', params: { id: item.columns.id}});
+
         },
       initialize () {
         this.desserts = [
