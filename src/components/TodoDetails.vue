@@ -120,6 +120,7 @@
           </v-dialog>
         </v-toolbar>
       </template>
+       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template v-slot:item.actions="{ item }">
         <v-icon
           size="small"
@@ -147,126 +148,122 @@
   </template>
 
 
-<script lang="ts">
+<script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { getTodoListItems, addTodoListItems } from "../services/todoListService.js"
-
-
-  export default {
-    data: () => ({
-      dialog: false,
-      dialogDelete: false,
-      headers: [
-      {
-            title: 'ID',
-            align: 'start',
-            sortable: false,
-            key: 'id',
-        },
-        {
-            title: 'Todo title',
-            sortable: false,
-            key: 'title',
-        },
-        { 
-            title: 'Description',
-            key: 'description' ,
-            sortable: false,
-        },
-        { 
-            title: 'Due date',
-            key: 'dueDate' ,
-        },
-        { 
-            title: 'Priority',
-            key: 'priority' ,
-        },
-        { title: 'Actions', key: 'actions', sortable: false },
-      ],
-      desserts: [],
-      editedIndex: -1,
-      editedItem: {
-        title: '',
-        description: '',
-        priority: '',
-        dueDate: 0,
-      },
-      defaultItem: {
-        title: '',
-        description: '',
-        priority: '',
-        dueDate: 0,
-      },
-    }),
-
-    components: {
-        VDataTable
+import { getTodoListItems, addTodoItem } from "../services/todoListService.js"
+export default {
+  data: () => ({
+    dialog: false,
+    dialogDelete: false,
+    todoListId: '',
+    headers: [
+    { 
+        title: 'ID',
+        align: 'start',
+        sortable: false,
+        key: 'id',
     },
-    computed: {
-      formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-      },
+    {
+        title: 'Todo title',
+        sortable: false,
+        key: 'title',
+    },
+    { 
+        title: 'Description',
+        key: 'description' ,
+        sortable: false,
+    },
+    { 
+        title: 'Due date',
+        key: 'dueDate' ,
+    },
+    { 
+        title: 'Priority',
+        key: 'priority' ,
+    },
+    { title: 'Actions', key: 'actions', sortable: false },
+    ],
+    desserts: [],
+    editedIndex: -1,
+    editedItem: {
+      title: '',
+      description: '',
+      priority: '',
+      dueDate: 0,
+    },
+    defaultItem: {
+      title: '',
+      description: '',
+      priority: '',
+      dueDate: 0,
+    },
+  }),
+
+  components: {
+      VDataTable
+  },
+  computed: {
+    formTitle () {
+      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+    },
+  },
+  watch: {
+    dialog (val) {
+      val || this.close()
+    },
+    dialogDelete (val) {
+      val || this.closeDelete()
+    },
+  },
+  async mounted () {
+    const newURL = window.location.pathname
+    let id = newURL.lastIndexOf('/')
+    this.todoListId = newURL.substring(id + 1)
+    this.desserts = await getTodoListItems(this.todoListId)
+  },
+  methods: {
+    editItem (item) {
+      this.editedIndex = this.desserts.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
     },
 
-    watch: {
-      dialog (val) {
-        val || this.close()
-      },
-      dialogDelete (val) {
-        val || this.closeDelete()
-      },
-    },
-    async mounted () {
-      const newURL = window.location.pathname
-      let id = newURL.lastIndexOf('/')
-      const resultId = newURL.substring(id + 1)
-      this.desserts = await getTodoListItems(resultId)
-      console.log(this.desserts, '1111')
+    deleteItem (item) {
+      this.editedIndex = this.desserts.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
     },
 
-    methods: {
-      editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialog = true
-      },
-
-      deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
-      },
-
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
-      },
-
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-
-      async save () {
-        console.log(await addTodoListItems(this.editedItem))
-        if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
-        } else {
-          this.desserts.push(this.editedItem)
-        }
-        this.close()
-      },
+    deleteItemConfirm () {
+      this.desserts.splice(this.editedIndex, 1)
+      this.closeDelete()
     },
-  }
+
+    close () {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    closeDelete () {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    async save () {
+      if (this.editedIndex > -1) {
+        Object.assign(this.desserts[this.editedIndex], this.editedItem)
+      } else {
+        const addedList = await addTodoItem(this.todoListId, this.editedItem)
+        this.desserts.push(addedList)
+      }
+      this.close()
+    },
+  },
+}
 </script>

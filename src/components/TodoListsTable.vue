@@ -93,16 +93,17 @@
           </v-dialog>
         </v-toolbar>
       </template>
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template v-slot:item.actions="{ item }">
         <v-btn size="small" @click="detail(item)">Details</v-btn>
       </template>
     </v-data-table>
   </template>
 
-<script >
+<script>
 
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { getTodoList, addTodoList } from "../services/todoListService.js"
+import { getTodoList, addTodoList } from "../services/todoListService"
  
   export default {
     data: () => ({
@@ -152,12 +153,10 @@ import { getTodoList, addTodoList } from "../services/todoListService.js"
 
     async mounted () {
       this.desserts = await getTodoList()
-      console.log(this.desserts, 'aaaa')
     },
     components: {
     VDataTable,
  },
-
     methods: {
         detail(item) {
             this.$router.push({name: 'todolist', params: { id: item.columns.id}});
@@ -170,11 +169,10 @@ import { getTodoList, addTodoList } from "../services/todoListService.js"
         })
       },
       async save () {
-        console.log(await addTodoList(this.editedItem))
         if (this.editedIndex > -1) {
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
-          this.desserts.push(this.editedItem)
+          this.desserts.push(await addTodoList(this.editedItem))
         }
         this.close()
       },

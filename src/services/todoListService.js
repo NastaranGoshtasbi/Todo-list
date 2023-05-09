@@ -1,40 +1,47 @@
-import { BASE_URL } from "@/types/constants";
 import { uuid } from 'vue-uuid'; 
 
-// TODO centralize/generic http requests
+import { request } from "@/services/httpClient";
 
 export const getTodoList = async () => {
-    const response = await fetch(`${BASE_URL}/todo-list`);
-    const data = await response.json();
-    return data;
+    const response = await request("GET", "/todo-list");
+    return response.body;
 }
 
 export const getTodoListItems = async (todoListId) => {
-    const response = await fetch(`${BASE_URL}/todo-list/${todoListId}`);
-    const data = await response.json();
-    return data.items;
+    const response = await request("GET", `/todo-list/${todoListId}`);
+    return response.body.items;
 }
 
 export const addTodoList = async (newTodoList) => {
     // TODO should be done by the BE
-    newTodoList.id = uuid.v4();
-    newTodoList.creattionDate = new Date();
+    const toAdd = JSON.parse(JSON.stringify(newTodoList));
+    toAdd.id = uuid.v4();
+    toAdd.creationDate = new Date();
+    toAdd.items = [];
 
-    const response = await fetch(`${BASE_URL}/todo-list`, {
-        method: "POST", 
-        body: JSON.stringify(newTodoList),
-      });
-    return response;
+    const response = await request("POST", "/todo-list", undefined, {body: toAdd});
+    return response.body;
 }
 
-export const addTodoListItems = async (newTodoList) => {
+export const addTodoItem = async (todoListId, newTodoItem) => {
     // TODO should be done by the BE
-    newTodoList.id = uuid.v4();
-    newTodoList.dueDate = new Date();
+    const toAdd = JSON.parse(JSON.stringify(newTodoItem));
+    toAdd.id = uuid.v4();
 
-    const response = await fetch(`${BASE_URL}/todo-list`, {
-        method: "POST", 
-        body: JSON.stringify(newTodoList),
-      });
-    return response;
+    const response = await request("POST", `/todo-list/${todoListId}/items`, undefined, {body: toAdd});
+    return response.body;
+}
+
+export const editTodoItem = async (todoListId, newTodoItem) => {
+    // TODO should be done by the BE
+    const toAdd = JSON.parse(JSON.stringify(newTodoItem));
+    toAdd.id = uuid.v4();
+
+    const response = await request("PUT", `/todo-list/${todoListId}/items`, undefined, {body: toAdd});
+    return response.body;
+}
+
+export const deleteTodoItem = async (todoListId, todoItemId) => {
+    const response = await request("DELETE", `/todo-list/${todoListId}/items/${todoItemId}`, undefined, {});
+    return response.body;
 }
