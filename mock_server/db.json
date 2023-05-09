@@ -1,0 +1,48 @@
+{
+  "todo-list": [
+    {
+      "id": "2a0e3ba2-86bd-4c81-9526-aad4a388c1c9",
+      "description": "My grocery list",
+      "title": "Groceries",
+      "creationDate": "2023-01-01T23:28:56.782Z",
+      "items": [
+        {
+          "id": "27c8cb02-6b0a-428b-ac8e-6394da13a50c",
+          "description": "test for specific task",
+          "title": "Milk",
+          "completed": false,
+          "dueDate": "2023-01-01T23:28:56.782Z",
+          "priority": "HIGH"
+        },
+        {
+          "id": "ed9d8659-8740-4795-a56b-0aa63642f337",
+          "description": "",
+          "title": "Eggs",
+          "completed": false,
+          "dueDate": "2023-01-01T23:28:56.782Z",
+          "priority": "HIGH"
+        },
+        {
+          "id": "ccfc1d17-80a3-45cd-91c9-7764dcd03792",
+          "description": "",
+          "title": "Bread",
+          "completed": false,
+          "dueDate": "2023-01-01T23:28:56.782Z",
+          "priority": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "zZnoVFP"
+    },
+    {
+      "id": "79rpaXa"
+    },
+    {
+      "id": "kB6Bp9m"
+    },
+    {
+      "id": "rlxPJ8u"
+    }
+  ]
+}

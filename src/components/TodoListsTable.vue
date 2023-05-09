@@ -99,10 +99,11 @@
     </v-data-table>
   </template>
 
-<script>
+<script >
 
 import { VDataTable } from 'vuetify/labs/VDataTable'
-
+import { getTodoList, addTodoList } from "../services/todoListService.js"
+ 
   export default {
     data: () => ({
       dialog: false,
@@ -126,7 +127,7 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
         },
         { 
             title: 'Created date',
-            key: 'created' ,
+            key: 'creationDate' ,
         },
         { title: 'Details', key: 'actions' }
       ],
@@ -149,10 +150,10 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
       },
     },
 
-    created () {
-      this.initialize()
+    async mounted () {
+      this.desserts = await getTodoList()
+      console.log(this.desserts, 'aaaa')
     },
-
     components: {
     VDataTable,
  },
@@ -160,36 +161,7 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
     methods: {
         detail(item) {
             this.$router.push({name: 'todolist', params: { id: item.columns.id}});
-
         },
-      initialize () {
-        this.desserts = [
-          {
-            id: 1,
-            title: 'todo 1',
-            description: 'todo',
-            created: '2022/05/03',
-          },
-          {
-            id: 2,
-            title: 'todo 2',
-            description: 'todooo',
-            created: '2022/06/02',
-          },
-          {
-            id: 3,
-            title: 'todo 3',
-            description: 'todo',
-            created: '2022/07/02',
-          },
-          {
-            id: 4,
-            title: 'todo 4',
-            description: 'todoo',
-            created: '2023/01/02',
-          },
-        ]
-      },
       close () {
         this.dialog = false
         this.$nextTick(() => {
@@ -197,7 +169,8 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
           this.editedIndex = -1
         })
       },
-      save () {
+      async save () {
+        console.log(await addTodoList(this.editedItem))
         if (this.editedIndex > -1) {
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {

@@ -44,8 +44,8 @@
                       md="4"
                     >
                       <v-text-field
-                        v-model="editedItem.name"
-                        label="Dessert name"
+                        v-model="editedItem.title"
+                        label="Title"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -54,8 +54,8 @@
                       md="4"
                     >
                       <v-text-field
-                        v-model="editedItem.calories"
-                        label="Calories"
+                        v-model="editedItem.description"
+                        label="Description"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -64,8 +64,8 @@
                       md="4"
                     >
                       <v-text-field
-                        v-model="editedItem.fat"
-                        label="Fat (g)"
+                        v-model="editedItem.priority"
+                        label="Priority"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -74,8 +74,8 @@
                       md="4"
                     >
                       <v-text-field
-                        v-model="editedItem.carbs"
-                        label="Carbs (g)"
+                        v-model="editedItem.dueDate"
+                        label="Due date"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -83,10 +83,6 @@
                       sm="6"
                       md="4"
                     >
-                      <v-text-field
-                        v-model="editedItem.protein"
-                        label="Protein (g)"
-                      ></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -139,53 +135,67 @@
           mdi-delete
         </v-icon>
       </template>
-      <template v-slot:no-data>
+      <!-- <template v-slot:no-data>
         <v-btn
           color="primary"
           @click="initialize"
         >
           Reset
         </v-btn>
-      </template>
+      </template> -->
     </v-data-table>
   </template>
 
 
-<script>
+<script lang="ts">
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { getTodoListItems, addTodoListItems } from "../services/todoListService.js"
+
 
   export default {
     data: () => ({
       dialog: false,
       dialogDelete: false,
       headers: [
-        {
-          title: 'Dessert (100g serving)',
-          align: 'start',
-          sortable: false,
-          key: 'name',
+      {
+            title: 'ID',
+            align: 'start',
+            sortable: false,
+            key: 'id',
         },
-        { title: 'Calories', key: 'calories' },
-        { title: 'Fat (g)', key: 'fat' },
-        { title: 'Carbs (g)', key: 'carbs' },
-        { title: 'Protein (g)', key: 'protein' },
+        {
+            title: 'Todo title',
+            sortable: false,
+            key: 'title',
+        },
+        { 
+            title: 'Description',
+            key: 'description' ,
+            sortable: false,
+        },
+        { 
+            title: 'Due date',
+            key: 'dueDate' ,
+        },
+        { 
+            title: 'Priority',
+            key: 'priority' ,
+        },
         { title: 'Actions', key: 'actions', sortable: false },
       ],
       desserts: [],
       editedIndex: -1,
       editedItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
+        title: '',
+        description: '',
+        priority: '',
+        dueDate: 0,
       },
       defaultItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
+        title: '',
+        description: '',
+        priority: '',
+        dueDate: 0,
       },
     }),
 
@@ -206,87 +216,15 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
         val || this.closeDelete()
       },
     },
-
-    created () {
-      this.initialize()
+    async mounted () {
+      const newURL = window.location.pathname
+      let id = newURL.lastIndexOf('/')
+      const resultId = newURL.substring(id + 1)
+      this.desserts = await getTodoListItems(resultId)
+      console.log(this.desserts, '1111')
     },
 
     methods: {
-      initialize () {
-        this.desserts = [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-            fat: 3.7,
-            carbs: 67,
-            protein: 4.3,
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-            fat: 16.0,
-            carbs: 49,
-            protein: 3.9,
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-          },
-        ]
-      },
-
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
         this.editedItem = Object.assign({}, item)
@@ -320,7 +258,8 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
         })
       },
 
-      save () {
+      async save () {
+        console.log(await addTodoListItems(this.editedItem))
         if (this.editedIndex > -1) {
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
