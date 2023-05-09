@@ -1,0 +1,216 @@
+<template>
+    <v-data-table
+      :headers="headers"
+      :items="desserts"
+      :sort-by="[{ key: 'created', order: 'asc' }]"
+      class="elevation-1"
+    >
+      <template v-slot:top>
+        <v-toolbar
+          flat
+        >
+          <v-toolbar-title>My TODO LISTS</v-toolbar-title>
+          <v-divider
+            class="mx-4"
+            inset
+            vertical
+          ></v-divider>
+          <v-spacer></v-spacer>
+          <v-dialog
+            v-model="dialog"
+            max-width="500px"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="primary"
+                dark
+                class="mb-2"
+                v-bind="props"
+              >
+                New Item
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class="text-h5">{{ formTitle }}</span>
+              </v-card-title>
+  
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      xs="12"
+                      lg="6"
+                    >
+                      <v-text-field
+                        v-model="editedItem.title"
+                        label="Title"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      xs="12"
+                      lg="6"
+                    >
+                      <v-text-field
+                        v-model="editedItem.created"
+                        label="Created Date"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      xs="12"
+                      lg="6"
+                    >
+                      <v-text-field
+                        v-model="editedItem.description"
+                        label="Description"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+  
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue-darken-1"
+                  variant="text"
+                  @click="close"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                  color="blue-darken-1"
+                  variant="text"
+                  @click="save"
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-btn size="small" @click="detail(item)">Details</v-btn>
+      </template>
+    </v-data-table>
+  </template>
+
+<script>
+
+import { VDataTable } from 'vuetify/labs/VDataTable'
+
+  export default {
+    data: () => ({
+      dialog: false,
+      dialogDelete: false,
+      headers: [
+      {
+            title: 'ID',
+            align: 'start',
+            sortable: false,
+            key: 'id',
+        },
+        {
+            title: 'Todo title',
+            sortable: false,
+            key: 'title',
+        },
+        { 
+            title: 'Description',
+            key: 'description' ,
+            sortable: false,
+        },
+        { 
+            title: 'Created date',
+            key: 'created' ,
+        },
+        { title: 'Details', key: 'actions' }
+      ],
+      desserts: [],
+      editedIndex: -1,
+      editedItem: {
+        title: '',
+        description: '',
+        created: ''
+      },
+      defaultItem: {
+        title: '',
+        description: '',
+        created: ''
+      },
+    }),
+
+    computed: {
+      formTitle () {
+        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      },
+    },
+
+    watch: {
+      dialog (val) {
+        val || this.close()
+      },
+    },
+
+    created () {
+      this.initialize()
+    },
+
+    components: {
+    VDataTable,
+ },
+
+    methods: {
+        detail(item) {
+            console.log(item.title)
+        },
+      initialize () {
+        this.desserts = [
+          {
+            id: 1,
+            title: 'todo 1',
+            description: 'todo',
+            created: '2022/05/03',
+          },
+          {
+            id: 2,
+            title: 'todo 2',
+            description: 'todooo',
+            created: '2022/06/02',
+          },
+          {
+            id: 3,
+            title: 'todo 3',
+            description: 'todo',
+            created: '2022/07/02',
+          },
+          {
+            id: 4,
+            title: 'todo 4',
+            description: 'todoo',
+            created: '2023/01/02',
+          },
+        ]
+      },
+      close () {
+        this.dialog = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+      save () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        } else {
+          this.desserts.push(this.editedItem)
+        }
+        this.close()
+      },
+    },
+  }
+</script>
