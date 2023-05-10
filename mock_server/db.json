@@ -2,63 +2,56 @@
   "todo-list": [
     {
       "id": "2a0e3ba2-86bd-4c81-9526-aad4a388c1c9",
-      "description": "My grocery list",
-      "title": "Groceries",
+      "description": "Complete panel for demo",
+      "title": "Reporting panel",
       "creationDate": "2023-01-01T23:28:56.782Z",
       "items": [
         {
-          "id": "27c8cb02-6b0a-428b-ac8e-6394da13a50c",
-          "description": "test for specific task",
-          "title": "Milk",
-          "completed": false,
-          "dueDate": "2023-01-01T23:28:56.782Z",
-          "priority": "HIGHs"
-        },
-        {
           "id": "ed9d8659-8740-4795-a56b-0aa63642f337",
-          "description": "",
-          "title": "Eggs",
+          "description": "Complete UI of page",
+          "title": "Reporting page",
           "completed": false,
           "dueDate": "2023-01-01T22:28:56.782Z",
           "priority": "MEDIUM"
         },
         {
+          "id": "27c8cb02-6b0a-428b-ac8e-6394da13a50c",
+          "description": "Pending for services",
+          "title": "Get reports",
+          "completed": false,
+          "dueDate": "2023-01-01T23:28:56.782Z",
+          "priority": "HIGHs"
+        },
+        {
           "id": "ccfc1d17-80a3-45cd-91c9-7764dcd03792",
-          "description": "sdf",
-          "title": "Bread",
+          "description": "Test",
+          "title": "Testing",
           "completed": false,
           "dueDate": "2023-01-01T21:28:56.782Z",
           "priority": "HIGH"
-        },
-        {
-          "title": "sdasd",
-          "description": "sdsd",
-          "priority": "asdsd",
-          "dueDate": 0,
-          "id": "96753f95-0c45-40ed-892c-70866b75a8a7"
         }
       ]
     },
     {
-      "title": "test",
-      "description": "",
+      "title": "Todo table",
+      "description": "Create todo list table",
       "created": "",
       "id": "f5c02174-dad7-4654-8826-40d60cdceb6c",
       "creationDate": "2023-05-09T16:49:03.587Z",
       "items": []
     },
     {
-      "title": "sdfasdf",
-      "description": "hjhjj",
+      "title": "Todo details",
+      "description": "Create todo details table",
       "created": "",
       "id": "40c137d4-785c-4764-80a2-96595eadf6d9",
       "creationDate": "2023-05-09T16:50:29.445Z",
       "items": [
         {
-          "title": "123",
-          "description": "123",
-          "priority": "123",
-          "dueDate": 0,
+          "title": "New item",
+          "description": "Create new items popup",
+          "priority": "MEDIUM",
+          "dueDate": "2023-06-09T16:50:29.445Z",
           "id": "0255d8da-271d-4003-a36b-4aa946d7e5a0"
         }
       ]

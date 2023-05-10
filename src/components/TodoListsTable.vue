@@ -1,7 +1,7 @@
 <template>
     <v-data-table
       :headers="headers"
-      :items="desserts"
+      :items="todos"
       :sort-by="[{ key: 'created', order: 'asc' }]"
       class="elevation-1"
     >
@@ -120,9 +120,9 @@ import { getTodoList, addTodoList } from "../services/todoListService"
             title: 'Created date',
             key: 'creationDate' ,
         },
-        { title: 'Details', key: 'actions' }
+        { title: 'Details', sortable: false, key: 'actions' }
       ],
-      desserts: [],
+      todos: [],
       editedIndex: -1,
       editedItem: {
         title: '',
@@ -142,7 +142,7 @@ import { getTodoList, addTodoList } from "../services/todoListService"
     },
 
     async mounted () {
-      this.desserts = await getTodoList()
+      this.todos = await getTodoList()
     },
     components: {
     VDataTable,
@@ -160,12 +160,15 @@ import { getTodoList, addTodoList } from "../services/todoListService"
       },
       async save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          Object.assign(this.todos[this.editedIndex], this.editedItem)
         } else {
-          this.desserts.push(await addTodoList(this.editedItem))
+          this.todos.push(await addTodoList(this.editedItem))
         }
         this.close()
       },
     },
   }
 </script>
+
+<style>
+</style>
