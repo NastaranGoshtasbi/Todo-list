@@ -251,18 +251,13 @@ export default {
     let id = newURL.lastIndexOf('/')
     this.todoListId = newURL.substring(id + 1)
     this.todoContents = await getTodoListItems(this.todoListId)
-    console.log(this.todoContents)
-    console.log(this.todoFilter.length)
   },
   methods: {
     updatePriority (priorityVal) {
       this.todoFilter = this.todoContents
-      console.log(priorityVal)
-      console.log(this.todoFilter)
       this.todoFilter = this.todoFilter.filter((item) => {
         return item.priority.includes(priorityVal)
       })
-      console.log(this.todoFilter)
     },
 
     editItem(item) {
