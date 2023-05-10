@@ -54,16 +54,6 @@
                       lg="6"
                     >
                       <v-text-field
-                        v-model="editedItem.created"
-                        label="Created Date"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      xs="12"
-                      lg="6"
-                    >
-                      <v-text-field
                         v-model="editedItem.description"
                         label="Description"
                       ></v-text-field>

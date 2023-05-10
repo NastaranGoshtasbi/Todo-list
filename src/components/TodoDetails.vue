@@ -150,7 +150,7 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { getTodoListItems, addTodoItem } from "../services/todoListService.js"
+import { getTodoListItems, addTodoItem , editTodoItem, deleteTodoItem } from "../services/todoItemService.js"
 export default {
   data: () => ({
     dialog: false,
@@ -228,9 +228,11 @@ export default {
       this.dialog = true
     },
 
-    deleteItem (item) {
+    async deleteItem (item) {
       this.editedIndex = this.desserts.indexOf(item)
       this.editedItem = Object.assign({}, item)
+      if(this.editedItem)
+        await deleteTodoItem(this.todoListId, this.editedItem.id)
       this.dialogDelete = true
     },
 
@@ -258,6 +260,7 @@ export default {
     async save () {
       if (this.editedIndex > -1) {
         Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        await editTodoItem(this.todoListId, this.editedItem)
       } else {
         const addedList = await addTodoItem(this.todoListId, this.editedItem)
         this.desserts.push(addedList)
